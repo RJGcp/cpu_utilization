@@ -10,9 +10,9 @@ resource "google_monitoring_notification_channel" "basic" {
   }
 }
 
-data "google_monitoring_notification_channel" "Alerts" {
-  display_name = "Alerts"
-}
+# data "google_monitoring_notification_channel" "Alerts" {
+#   display_name = "Alerts"
+# }
 
 /*
 data "google_monitoring_group" "king-of-kings" {
@@ -36,7 +36,7 @@ resource "google_monitoring_alert_policy" "cpu_utilization" {
   conditions {
     display_name = "Critical: Project[${var.project}] GCE instance CPU Utilization is 0%"
     condition_absent {
-      filter          = "metric.type=\"compute.googleapis.com/instance/cpu/usage_time\" AND resource.type=\"gce_instance\" AND group.id=\"${google_monitoring_group.check.display_name}\""
+      filter          = "metric.type=\"compute.googleapis.com/instance/cpu/usage_time\" AND resource.type=\"gce_instance\" AND group.id=\"${google_monitoring_group.check.id}\""
       duration        = "3600s"
       aggregations {
         alignment_period   = "300s"
@@ -47,6 +47,6 @@ resource "google_monitoring_alert_policy" "cpu_utilization" {
       }
     }  
   }
-  notification_channels = ["${data.google_monitoring_notification_channel.Alerts.id}"]
-  # ["${google_monitoring_notification_channel.basic.id}"]
+  notification_channels = ["${google_monitoring_notification_channel.basic.id}"]
+  # ["${data.google_monitoring_notification_channel.Alerts.id}"]
 }
